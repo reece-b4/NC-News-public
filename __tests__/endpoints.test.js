@@ -13,7 +13,6 @@ afterAll(() => {
   return db.end();
 });
 
-// is not empty array assertion ok here as that table shouldnt ever be empty from the start? For purpose of this task yes as we are seeding with this data?
 describe("/api/topics", () => {
   describe("GET", () => {
     test("200 - responds with array of topic objects with properties: slug, description", () => {
@@ -78,11 +77,24 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
+  describe('PATCH', ()=> {
+      test('accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article', ()=>{
+
+      })
+  })
 });
+
+describe('', ()=> {
+
+})
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
-//   sql injection
+//sql injection
 //data mutation
-//potentially refactor created_at in get article by id path
-//when commit check change to previous code, added line to check no empty array but commited with previous push by accident without noting it, added.length assertion to get/api/topics, refactored error handling
+
+//while waiting for pull request to be approved, making and switching to new branch to work on also changes previous branch.
+
+//refactor controllers and models folders/files
+
+//testnotes
