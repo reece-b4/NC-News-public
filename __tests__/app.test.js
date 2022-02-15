@@ -130,6 +130,26 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
+    test(" 400- given incorrect but existing key returns message: not found", () => {
+      const votes = { title: 9 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    });
+    test(" 400- given empty object returns message: bad request", () => {
+      const votes = {};
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    });
   });
 })
 
