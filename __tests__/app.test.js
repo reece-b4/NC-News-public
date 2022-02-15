@@ -120,7 +120,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
     //if no code change needed outside of test, is the error test redundant?
-    test(" 400- given incorrect votes data type returns message: bad request", () => {
+    test(" 400 - given incorrect votes data type returns message: bad request", () => {
       const votes = { inc_votes: 'not-a-valid-vote-count' };
       return request(app)
         .patch("/api/articles/999999")
@@ -133,6 +133,26 @@ describe("/api/articles/:article_id", () => {
   });
 })
 
+//ticket 21
+describe('/api/users', () =>{
+  describe('GET', () => {
+    test.only('200 - returns array of objects with username property', () => {
+      return request(app).get('/api/users')
+      .then((res)=>{
+        console.log(res.body, 'res.body')
+        res.body.usernames.forEach((user)=>{
+          expect.objectContaining({
+            username: expect.any(String)
+          })
+          expect.not.objectContaining({
+            name: expect.any(String),
+            avatar_url: expect.any(String)
+          })
+        })
+      })
+    })
+  })
+})
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
