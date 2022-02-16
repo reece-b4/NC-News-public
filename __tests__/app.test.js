@@ -210,10 +210,16 @@ describe('/api/articles/:article_id/comments', () => {
         })
       })
     })
+    test('200 - article exists but has no comments', ()=>{
+      return request(app).get('/api/articles/2/comments')
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.comments).toEqual([]);
+      })
+    })
   })
 })
-// add line that ensures empty array doesnt pass test incorrectly
-// errors: given wrong path, wrong id type, non existent id, correct id but no comments
+
 
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
