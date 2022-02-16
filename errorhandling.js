@@ -2,7 +2,6 @@
 exports.notAPath = (req, res) => {
   res.status(404).send({ msg: "path not found" })
 };
-// next the error to next error function? I think so but errors are getting to other EMHW anyway. 
 
 exports.customErrors = (err, req, res, next) => {
     if (err.status === 404) {
