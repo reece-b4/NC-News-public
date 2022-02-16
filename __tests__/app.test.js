@@ -98,6 +98,24 @@ describe("/api/articles/:article_id", () => {
           });
         });
     });
+    test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article", () => {
+      const votes = { inc_votes: +9 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: expect.any(String),
+            votes: 109,
+          });
+        });
+    });
     //already covered by get request error?
     test("400 - given invalid id data type, returns message: bad request", () => {
       const votes = { inc_votes: -10 };
@@ -138,6 +156,24 @@ describe("/api/articles/:article_id", () => {
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("bad request");
+        });
+    });
+    test(" 200- given extra key on body ignores incorrect key and returns updated article", () => {
+      const votes = { inc_votes: -10, title: 9 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: expect.any(String),
+            votes: 90,
+          });
         });
     });
     test(" 400- given empty object returns message: bad request", () => {
