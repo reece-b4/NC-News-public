@@ -40,11 +40,10 @@ describe("/api/topics", () => {
       });
   });
 });
-
-//ticket 14
+//ticket 5
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
-    test("200 - responds with article object with properties: author<username from users table>, title, article_id, body, topic, created_at, votes", () => {
+    test("200 - responds with article object with properties: author<username from users table>, title, article_id, body, topic, created_at, votes, comment count", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
@@ -57,6 +56,7 @@ describe("/api/articles/:article_id", () => {
             body: "I find this existence challenging",
             created_at: expect.any(String),
             votes: 100,
+            comment_count: 11
           });
         });
     });
@@ -78,7 +78,6 @@ describe("/api/articles/:article_id", () => {
     });
   });
 
-  //ticket 7
   describe("PATCH", () => {
     test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article", () => {
       const votes = { inc_votes: -10 };
@@ -116,7 +115,6 @@ describe("/api/articles/:article_id", () => {
           });
         });
     });
-    //already covered by get request error?
     test("400 - given invalid id data type, returns message: bad request", () => {
       const votes = { inc_votes: -10 };
       return request(app)
@@ -127,17 +125,7 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
-    test("404 - given correct id with no data, returns message: not found", () => {
-      const votes = { inc_votes: -10 };
-      return request(app)
-        .patch("/api/articles/999999")
-        .send(votes)
-        .expect(404)
-        .then((res) => {
-          expect(res.body.msg).toBe("not found");
-        });
     });
-    //if no code change needed outside of test, is the error test redundant?
     test(" 400 - given incorrect votes data type returns message: bad request", () => {
       const votes = { inc_votes: 'not-a-valid-vote-count' };
       return request(app)
@@ -148,7 +136,7 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
-    test(" 400- given incorrect but existing key returns message: not found", () => {
+    test(" 400- given incorrect but existing key returns message: bad request", () => {
       const votes = { title: 9 };
       return request(app)
         .patch("/api/articles/1")
@@ -187,9 +175,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
-})
 
-//ticket 21
 describe('/api/users', () =>{
   describe('GET', () => {
     test('200 - returns array of objects with username property', () => {
