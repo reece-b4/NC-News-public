@@ -12,6 +12,7 @@ app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById)
 app.patch('/api/articles/:article_id', patchArticleById)
 app.get('/api/users', getUsernames)
+app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 
 
 // handle:global, custom, psql, server errors

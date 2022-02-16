@@ -13,7 +13,6 @@ exports.customErrors = (err, req, res, next) => {
 
 exports.sqlErrors = (err, req, res, next) => {
   if ((err.code === "22P02")) {
-    console.log('psql EHMF', err)
     res.status(400).send({ msg: "bad request" });
   } else {
       next(err)

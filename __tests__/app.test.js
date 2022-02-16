@@ -136,10 +136,9 @@ describe("/api/articles/:article_id", () => {
 //ticket 21
 describe('/api/users', () =>{
   describe('GET', () => {
-    test.only('200 - returns array of objects with username property', () => {
+    test('200 - returns array of objects with username property', () => {
       return request(app).get('/api/users')
       .then((res)=>{
-        console.log(res.body, 'res.body')
         res.body.usernames.forEach((user)=>{
           expect.objectContaining({
             username: expect.any(String)
@@ -153,6 +152,32 @@ describe('/api/users', () =>{
     })
   })
 })
+
+//ticket 15
+// describe('/api/articles/:article_id/comments', () => {
+//   describe('GET', ()=>{
+//     test('200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body', ()=> {
+//       return request(app).get('/api/articles/1/comments')
+//       .expect(200)
+//       .then((res)=>{
+
+//         const comments = res.body.comments;
+//         comments.forEach((comment)=>{
+//           expect(comments).not.toEqual([]);
+//           expect.objectContaining({comment_id: expect.any(Number),
+//           votes: expect.any(Number),
+//         created_at: expect.any(String),
+//         author: expect.any(String),
+//         body: expect.any(String)
+//       })
+//         })
+//       })
+//     })
+//   })
+// })
+//add line that ensures empty array doesnt pass test incorrectly
+// errors: given wrong path, wrong id type, non existent id, correct id but no comments
+
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
