@@ -192,10 +192,10 @@ describe("/api/articles/:article_id", () => {
 //ticket 21
 describe('/api/users', () =>{
   describe('GET', () => {
-    test.only('200 - returns array of objects with username property', () => {
+    test('200 - returns array of objects with username property', () => {
       return request(app).get('/api/users')
+      .expect(200)
       .then((res)=>{
-        console.log(res.body, 'res.body')
         res.body.usernames.forEach((user)=>{
           expect.objectContaining({
             username: expect.any(String)
