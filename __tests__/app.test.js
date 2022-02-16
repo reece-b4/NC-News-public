@@ -174,6 +174,7 @@ describe('/api/users', () =>{
   describe('GET', () => {
     test('200 - returns array of objects with username property', () => {
       return request(app).get('/api/users')
+      .expect(200)
       .then((res)=>{
         res.body.usernames.forEach((user)=>{
           expect.objectContaining({
