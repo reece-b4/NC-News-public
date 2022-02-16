@@ -210,6 +210,8 @@ describe('/api/users', () =>{
   })
 })
 
+//ticket9
+
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
 //sql injection
