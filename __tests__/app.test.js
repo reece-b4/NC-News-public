@@ -68,14 +68,6 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
-    test("404 - given non existent id with no data, returns message: not found", () => {
-      return request(app)
-        .get("/api/articles/999999")
-        .expect(404)
-        .then((res) => {
-          expect(res.body.msg).toBe("not found");
-        });
-    });
   });
 
   //ticket 7
@@ -116,7 +108,6 @@ describe("/api/articles/:article_id", () => {
           });
         });
     });
-    //already covered by get request error?
     test("400 - given invalid id data type, returns message: bad request", () => {
       const votes = { inc_votes: -10 };
       return request(app)
@@ -127,17 +118,6 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
-    test("404 - given correct id with no data, returns message: not found", () => {
-      const votes = { inc_votes: -10 };
-      return request(app)
-        .patch("/api/articles/999999")
-        .send(votes)
-        .expect(404)
-        .then((res) => {
-          expect(res.body.msg).toBe("not found");
-        });
-    });
-    //if no code change needed outside of test, is the error test redundant?
     test(" 400 - given incorrect votes data type returns message: bad request", () => {
       const votes = { inc_votes: 'not-a-valid-vote-count' };
       return request(app)
@@ -210,28 +190,29 @@ describe('/api/users', () =>{
 })
 
 //ticket 15
-// describe('/api/articles/:article_id/comments', () => {
-//   describe('GET', ()=>{
-//     test('200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body', ()=> {
-//       return request(app).get('/api/articles/1/comments')
-//       .expect(200)
-//       .then((res)=>{
-
-//         const comments = res.body.comments;
-//         comments.forEach((comment)=>{
-//           expect(comments).not.toEqual([]);
-//           expect.objectContaining({comment_id: expect.any(Number),
-//           votes: expect.any(Number),
-//         created_at: expect.any(String),
-//         author: expect.any(String),
-//         body: expect.any(String)
-//       })
-//         })
-//       })
-//     })
-//   })
-// })
-//add line that ensures empty array doesnt pass test incorrectly
+describe('/api/articles/:article_id/comments', () => {
+  describe('GET', ()=>{
+    test('200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body', ()=> {
+      return request(app).get('/api/articles/1/comments')
+      .expect(200)
+      .then((res)=>{
+        const comments = res.body.comments;
+        expect(comments.length).toBe(11);
+        comments.forEach((comment)=>{
+          expect(comment.article_id).toBe(1);
+          expect(comments).not.toEqual([]);
+          expect.objectContaining({comment_id: expect.any(Number),
+          votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String)
+      })
+        })
+      })
+    })
+  })
+})
+// add line that ensures empty array doesnt pass test incorrectly
 // errors: given wrong path, wrong id type, non existent id, correct id but no comments
 
 
@@ -239,7 +220,9 @@ describe('/api/users', () =>{
 
 //sql injection
 //data mutation
-
-//while waiting for pull request to be approved, making and switching to new branch to work on also changes previous branch.
-
 // refactor to use async/await?
+//refactor variable names to js convention without _'s
+
+//psql error function had to have if statement updated after merging branches due to subbranch messup stopped 2 error tests passing
+//removed redundant 404 tests covered by global test
+//refactored controller functions into index file 
