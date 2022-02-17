@@ -68,6 +68,14 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.msg).toBe("bad request");
         });
     });
+    test("404 - given non existent id with no data, returns message: not found", () => {
+      return request(app)
+        .get("/api/articles/999999")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+        });
+    });
   });
 
   //ticket 7
@@ -108,6 +116,16 @@ describe("/api/articles/:article_id", () => {
           });
         });
     });
+    test("404 - given correct id with no data, returns message: not found", () => {
+      const votes = { inc_votes: -10 };
+      return request(app)
+        .patch("/api/articles/999999")
+        .send(votes)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+        });
+    });
     test("400 - given invalid id data type, returns message: bad request", () => {
       const votes = { inc_votes: -10 };
       return request(app)
@@ -121,14 +139,14 @@ describe("/api/articles/:article_id", () => {
     test(" 400 - given incorrect votes data type returns message: bad request", () => {
       const votes = { inc_votes: 'not-a-valid-vote-count' };
       return request(app)
-        .patch("/api/articles/999999")
+        .patch("/api/articles/1")
         .send(votes)
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("bad request");
         });
     });
-    test(" 400- given incorrect but existing key returns message: not found", () => {
+    test(" 400- given incorrect but existing key returns message: bad request", () => {
       const votes = { title: 9 };
       return request(app)
         .patch("/api/articles/1")
@@ -216,6 +234,13 @@ describe('/api/articles/:article_id/comments', () => {
       .expect(200)
       .then((res)=>{
         expect(res.body.comments).toEqual([]);
+      })
+    })
+    test('404 - given possible but non existent article id returns message not found', () => {
+      return request(app).get('/api/articles/9999999/comments')
+      .expect(404)
+      .then((res)=>{
+        expect(res.body.msg).toBe('not found')
       })
     })
   })
