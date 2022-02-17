@@ -45,7 +45,7 @@ exports.selectCommentsByArticleId = (article_id) => {
 };
 
 exports.selectArticles = () =>{
-  return db.query(`SELECT articles.*, COUNT(comments.body)::INT AS comment_count 
+  return db.query(`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.body)::INT AS comment_count 
          FROM articles 
          LEFT JOIN comments 
          ON articles.article_id = comments.article_id

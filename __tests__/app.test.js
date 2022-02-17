@@ -264,13 +264,6 @@ describe('/api/articles', () => {
         })
       })
     })
-    test('200 - article exists but has no comments', ()=>{
-      return request(app).get('/api/articles/2/comments')
-      .expect(200)
-      .then((res)=>{
-        expect(res.body.comments).toEqual([]);
-      })
-    })
     test('404 - given possible but non existent article id returns message not found', () => {
       return request(app).get('/api/articles/9999999/comments')
       .expect(404)
