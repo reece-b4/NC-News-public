@@ -43,3 +43,11 @@ exports.selectCommentsByArticleId = (article_id) => {
   return rows
 })
 };
+
+exports.selectArticles = () =>{
+  return db.query(`SELECT * FROM articles
+  ORDER BY created_at DESC;`)
+  .then(({rows})=>{
+    return rows;
+  })
+}

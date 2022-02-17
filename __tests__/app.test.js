@@ -137,7 +137,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
     test(" 400 - given incorrect votes data type returns message: bad request", () => {
-      const votes = { inc_votes: 'not-a-valid-vote-count' };
+      const votes = { inc_votes: "not-a-valid-vote-count" };
       return request(app)
         .patch("/api/articles/1")
         .send(votes)
@@ -185,47 +185,81 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
-})
+});
 
 //ticket 21
-describe('/api/users', () =>{
-  describe('GET', () => {
-    test('200 - returns array of objects with username property', () => {
-      return request(app).get('/api/users')
-      .expect(200)
-      .then((res)=>{
-        res.body.usernames.forEach((user)=>{
-          expect.objectContaining({
-            username: expect.any(String)
-          })
-          expect.not.objectContaining({
-            name: expect.any(String),
-            avatar_url: expect.any(String)
-          })
-        })
-      })
-    })
-  })
-})
+describe("/api/users", () => {
+  describe("GET", () => {
+    test("200 - returns array of objects with username property", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((res) => {
+          res.body.usernames.forEach((user) => {
+            expect.objectContaining({
+              username: expect.any(String),
+            });
+            expect.not.objectContaining({
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            });
+          });
+        });
+    });
+  });
+});
 
 //ticket 15
-describe('/api/articles/:article_id/comments', () => {
+describe("/api/articles/:article_id/comments", () => {
+  describe("GET", () => {
+    test("200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((res) => {
+          const comments = res.body.comments;
+          expect(comments.length).toBe(11);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(1);
+            expect(comments).not.toEqual([]);
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+            });
+          });
+        });
+    });
+    test("200 - article exists but has no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.comments).toEqual([]);
+        });
+    });
+  });
+});
+
+//ticket 9
+describe('/api/articles', () => {
   describe('GET', ()=>{
-    test('200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body', ()=> {
-      return request(app).get('/api/articles/1/comments')
+    test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes. Sorted by descending date', ()=>{
+      return request(app).get('/api/articles')
       .expect(200)
       .then((res)=>{
-        const comments = res.body.comments;
-        expect(comments.length).toBe(11);
-        comments.forEach((comment)=>{
-          expect(comment.article_id).toBe(1);
-          expect(comments).not.toEqual([]);
-          expect.objectContaining({comment_id: expect.any(Number),
-          votes: expect.any(Number),
-        created_at: expect.any(String),
-        author: expect.any(String),
-        body: expect.any(String)
-      })
+        const articles = res.body.articles
+        expect(articles.length).toBe(12)
+        expect(articles).toBeSortedBy('created_at', {descending: true});
+        articles.forEach((article)=>{
+          expect.objectContaining({author:expect.any(String),
+            title: expect.any(String),
+          article_id: expect.any(Number),
+        topic: expect.any(String),
+      created_at: expect.any(String),
+    votes: expect.any(Number)})
         })
       })
     })
@@ -246,15 +280,9 @@ describe('/api/articles/:article_id/comments', () => {
   })
 })
 
-
-
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
 //sql injection
 //data mutation
-// refactor to use async/await?
+//refactor to use async/await?
 //refactor variable names to js convention without _'s
-
-//psql error function had to have if statement updated after merging branches due to subbranch messup stopped 2 error tests passing
-//removed redundant 404 tests covered by global test
-//refactored controller functions into index file 
