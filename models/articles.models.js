@@ -31,7 +31,6 @@ exports.updateArticleById = (article_id, body) => {
       RETURNING *;`,
         [inc_votes, article_id]
       )
-      //refactor then block later to seperate function?
       .then(({ rows }) => {
         const article = rows[0];
         if (!article) {
@@ -59,5 +58,17 @@ exports.selectArticles = () =>{
    ORDER BY created_at DESC;`)
   .then(({rows})=>{
     return rows;
+  })
+}
+
+exports.addCommentByArticleId = ({username, body}, article_id) => {
+  if (body === undefined) {
+    return Promise.reject({status: 400, msg: 'bad request'})
+  }
+  return db.query(`INSERT into comments
+  (author, body, article_id)
+  VALUES ($1, $2, $3) RETURNING *;`, [username, body, article_id])
+  .then(({rows})=>{
+    return rows[0];
   })
 }
