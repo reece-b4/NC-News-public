@@ -248,31 +248,33 @@ describe('/api/articles', () => {
   })
 })
 
-//test return equal to, get request to check posted
-//errors, comment already exists, no body, body with extra keys, body with no username value, body with no body value, body with only username or body key.
-// describe('/api/articles/:article_id/comments', ()=> {
-//   describe('POST', () => {
-//     test('201 - give body object with properties: username & body, posts comment then returns posted comment', () => {
-//       return query(app).post('/api/articles/1/comments')
-//       .send({username: 'DevUser', body: 'Test comment.'})
-//       .expect(201)
-//       .then((res)=>{
-//         expect(res.body).toEqual({
-//           comment_id: expect.any(Number),
-//           body: 'Test comment.',
-//           votes: 0,
-//           author: 'DevUser',
-//           article_id: 1,
-//           created_at: expect.any(String)
-//         })
-//       })
-//     })
-//   })
-// })
+// test return equal to, get request to check posted
+// errors, comment already exists, no body, body with extra keys, body with no username value, body with no body value, body with only username or body key.
+describe('/api/articles/:article_id/comments', ()=> {
+  describe('POST', () => {
+    test('201 - give body object with properties: username & body, posts comment then returns posted comment', () => {
+      return request(app).post('/api/articles/1/comments')
+      .send({username: 'icellusedkars', body: 'Test comment.'})
+      .expect(201)
+      .then((res)=>{
+        expect(res.body.comment).toEqual({
+          comment_id: expect.any(Number),
+          body: 'Test comment.',
+          votes: 0,
+          author: 'icellusedkars',
+          article_id: 1,
+          created_at: expect.any(String)
+        })
+      })
+    })
+  })
+})
 
-//promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
+//promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found----I chained a .then block which negated need for this, any pros/cons of this method?
 
 //sql injection
 //data mutation
 //refactor to use async/await?
 //refactor variable names to js convention without _'s
+//refactor to include destructuring
+//check any tests need to prevent false pass by empty array
