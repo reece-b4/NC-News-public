@@ -41,7 +41,9 @@ exports.getCommentsByArticleId = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-  selectArticles().then((articles)=>{
+  const {query} = req
+  console.log(query)
+  selectArticles(req.query).then((articles)=>{
     res.status(200).send({articles})
   }).catch((err)=>{
     next(err)

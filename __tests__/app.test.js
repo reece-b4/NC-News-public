@@ -40,7 +40,7 @@ describe("/api/topics", () => {
       });
   });
 });
-//ticket 5
+
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
     test("200 - responds with article object with properties: author<username from users table>, title, article_id, body, topic, created_at, votes, comment count", () => {
@@ -235,7 +235,6 @@ describe("/api/users", () => {
   });
 });
 
-//ticket 21
 describe("/api/users", () => {
   describe("GET", () => {
     test("200 - returns array of objects with username property", () => {
@@ -257,7 +256,6 @@ describe("/api/users", () => {
   });
 });
 
-//ticket 15
 describe("/api/articles/:article_id/comments", () => {
   describe("GET", () => {
     test("200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body", () => {
@@ -291,27 +289,26 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
-//ticket 9
 describe('/api/articles', () => {
   describe('GET', ()=>{
-    test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date', ()=>{
-      return request(app).get('/api/articles')
-      .expect(200)
-      .then((res)=>{
-        const articles = res.body.articles
-        expect(articles.length).toBe(12)
-        expect(articles).toBeSortedBy('created_at', {descending: true});
-        articles.forEach((article)=>{
-          expect.objectContaining({author:expect.any(String),
-            title: expect.any(String),
-          article_id: expect.any(Number),
-        topic: expect.any(String),
-      created_at: expect.any(String),
-    votes: expect.any(Number),
-  comment_count: expect.any(Number)})
-        })
-      })
-    })
+  //   test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date', ()=>{
+  //     return request(app).get('/api/articles')
+  //     .expect(200)
+  //     .then((res)=>{
+  //       const articles = res.body.articles
+  //       expect(articles.length).toBe(12)
+  //       expect(articles).toBeSortedBy('created_at', {descending: true});
+  //       articles.forEach((article)=>{
+  //         expect.objectContaining({author:expect.any(String),
+  //           title: expect.any(String),
+  //         article_id: expect.any(Number),
+  //       topic: expect.any(String),
+  //     created_at: expect.any(String),
+  //   votes: expect.any(Number),
+  // comment_count: expect.any(Number)})
+  //       })
+  //     })
+  //   })
     test('200 - article exists but has no comments', ()=>{
       return request(app).get('/api/articles/2/comments')
       .expect(200)
@@ -326,6 +323,13 @@ describe('/api/articles', () => {
         expect(res.body.msg).toBe('not found')
       })
     })
+//     test.only('200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by)', ()=>{
+//       return request(app).get('/api/articles?sortby=title')
+//       .expect(200)
+//       .then((res)=>{
+//         expect(res.body.articles).toBeSortedBy('title',{ descending: true})
+//       })
+//     })
   })
 })
 
