@@ -248,6 +248,28 @@ describe('/api/articles', () => {
   })
 })
 
+//test return equal to, get request to check posted
+//errors, comment already exists, no body, body with extra keys, body with no username value, body with no body value, body with only username or body key.
+// describe('/api/articles/:article_id/comments', ()=> {
+//   describe('POST', () => {
+//     test('201 - give body object with properties: username & body, posts comment then returns posted comment', () => {
+//       return query(app).post('/api/articles/1/comments')
+//       .send({username: 'DevUser', body: 'Test comment.'})
+//       .expect(201)
+//       .then((res)=>{
+//         expect(res.body).toEqual({
+//           comment_id: expect.any(Number),
+//           body: 'Test comment.',
+//           votes: 0,
+//           author: 'DevUser',
+//           article_id: 1,
+//           created_at: expect.any(String)
+//         })
+//       })
+//     })
+//   })
+// })
+
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
 //sql injection

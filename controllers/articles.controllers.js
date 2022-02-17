@@ -44,3 +44,7 @@ exports.getArticles = (req, res, next) => {
     next(err)
   })
 }
+
+exports.postCommentByArticleId = (req, res, next) => {
+
+}
