@@ -1,4 +1,3 @@
-//label as global error/s if more
 exports.notAPath = (req, res) => {
   res.status(404).send({ msg: "path not found" })
 };
@@ -12,7 +11,7 @@ exports.customErrors = (err, req, res, next) => {
 } 
 
 exports.sqlErrors = (err, req, res, next) => {
-  if ((err.code === "22P02")) {
+  if ((err.code === "22P02" || err.code === '23502')) {
     res.status(400).send({ msg: "bad request" });
   } else {
       next(err)
