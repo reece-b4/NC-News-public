@@ -228,7 +228,7 @@ describe("/api/articles/:article_id/comments", () => {
 //ticket 9
 describe('/api/articles', () => {
   describe('GET', ()=>{
-    test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes. Sorted by descending date', ()=>{
+    test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date', ()=>{
       return request(app).get('/api/articles')
       .expect(200)
       .then((res)=>{
@@ -241,7 +241,8 @@ describe('/api/articles', () => {
           article_id: expect.any(Number),
         topic: expect.any(String),
       created_at: expect.any(String),
-    votes: expect.any(Number)})
+    votes: expect.any(Number),
+  comment_count: expect.any(Number)})
         })
       })
     })
