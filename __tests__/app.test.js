@@ -232,7 +232,7 @@ describe('/api/articles', () => {
       return request(app).get('/api/articles')
       .expect(200)
       .then((res)=>{
-        const {articles} = res.body
+        const articles = res.body.articles
         expect(articles.length).toBe(12)
         expect(articles).toBeSortedBy('created_at', {descending: true});
         articles.forEach((article)=>{
