@@ -4,6 +4,7 @@ const {
   selectCommentsByArticleId,
   selectArticles
 } = require("../models/articles.models.js");
+const { selectTopics } = require("../models/topics.models.js");
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -42,10 +43,18 @@ exports.getCommentsByArticleId = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const {query} = req
-  console.log(query)
-  selectArticles(req.query).then((articles)=>{
+  selectTopics()
+  .then((returnedTopics)=>{
+    const topics = returnedTopics.map((topic) => {
+      return topic.slug
+      })
+      return topics
+  })
+  .then((topicsArray)=>{
+  selectArticles(query, topicsArray).then((articles)=>{
     res.status(200).send({articles})
   }).catch((err)=>{
     next(err)
   })
+})
 }

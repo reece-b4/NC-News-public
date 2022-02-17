@@ -177,34 +177,23 @@ describe("/api/articles/:article_id", () => {
           author: "butter_bridge",
           body: "I find this existence challenging",
           created_at: expect.any(String),
-          votes: 90})
-        })
-      })
-
-
-    test("400 - given invalid id data type, returns message: bad request", () => {
-      const votes = { inc_votes: -10 };
-      return request(app)
-        .patch("/api/articles/not-an-id")
-        .send(votes)
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe("bad request");
+          votes: 90,
         });
-    });
-    test(" 400 - given incorrect votes data type returns message: bad request", () => {
-      const votes = { inc_votes: "not-a-valid-vote-count" };
-      return request(app)
-        .patch("/api/articles/1")
-        .send(votes)
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe("bad request");
-        });
-    });
+      });
   });
-  test(" 400- given empty object returns message: bad request", () => {
-    const votes = {};
+
+  test("400 - given invalid id data type, returns message: bad request", () => {
+    const votes = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/articles/not-an-id")
+      .send(votes)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request");
+      });
+  });
+  test(" 400 - given incorrect votes data type returns message: bad request", () => {
+    const votes = { inc_votes: "not-a-valid-vote-count" };
     return request(app)
       .patch("/api/articles/1")
       .send(votes)
@@ -213,6 +202,17 @@ describe("/api/articles/:article_id", () => {
         expect(res.body.msg).toBe("bad request");
       });
   });
+});
+test(" 400- given empty object returns message: bad request", () => {
+  const votes = {};
+  return request(app)
+    .patch("/api/articles/1")
+    .send(votes)
+    .expect(400)
+    .then((res) => {
+      expect(res.body.msg).toBe("bad request");
+    });
+});
 
 describe("/api/users", () => {
   describe("GET", () => {
@@ -286,52 +286,68 @@ describe("/api/articles/:article_id/comments", () => {
           expect(res.body.comments).toEqual([]);
         });
     });
+    test("404 - given possible but non existent article id returns message not found", () => {
+      return request(app)
+        .get("/api/articles/9999999/comments")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+        });
+    });
   });
 });
 
-describe('/api/articles', () => {
-  describe('GET', ()=>{
-  //   test('200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date', ()=>{
-  //     return request(app).get('/api/articles')
-  //     .expect(200)
-  //     .then((res)=>{
-  //       const articles = res.body.articles
-  //       expect(articles.length).toBe(12)
-  //       expect(articles).toBeSortedBy('created_at', {descending: true});
-  //       articles.forEach((article)=>{
-  //         expect.objectContaining({author:expect.any(String),
-  //           title: expect.any(String),
-  //         article_id: expect.any(Number),
-  //       topic: expect.any(String),
-  //     created_at: expect.any(String),
-  //   votes: expect.any(Number),
-  // comment_count: expect.any(Number)})
-  //       })
-  //     })
-  //   })
-    test('200 - article exists but has no comments', ()=>{
-      return request(app).get('/api/articles/2/comments')
-      .expect(200)
-      .then((res)=>{
-        expect(res.body.comments).toEqual([]);
-      })
-    })
-    test('404 - given possible but non existent article id returns message not found', () => {
-      return request(app).get('/api/articles/9999999/comments')
-      .expect(404)
-      .then((res)=>{
-        expect(res.body.msg).toBe('not found')
-      })
-    })
-//     test.only('200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by)', ()=>{
-//       return request(app).get('/api/articles?sortby=title')
-//       .expect(200)
-//       .then((res)=>{
-//         expect(res.body.articles).toBeSortedBy('title',{ descending: true})
-//       })
-//     })
-  })
-})
+describe("/api/articles", () => {
+  describe("GET", () => {
+    test("200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+          articles.forEach((article) => {
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            });
+          });
+        });
+    });
+    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - sortby title", () => {
+      return request(app)
+        .get("/api/articles?sortBy=title")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("title", { descending: true });
+        });
+    });
+    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - sortby topic order asc", () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASC")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("topic");
+        });
+    });
+    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - filter topic: mitch", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles.length).toBe(11);
+        });
+    });
+  });
+});
+
+//errors: bad queries, no match for sortby, order, topic,
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 

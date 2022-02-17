@@ -5,6 +5,8 @@ exports.notAPath = (req, res) => {
 exports.customErrors = (err, req, res, next) => {
     if (err.status === 404) {
         res.status(404).send({msg: 'not found'})
+    } else if (err.status === 400) {
+      res.status(400).send({msg: 'bad request'})
     } else {
         next(err);
     }

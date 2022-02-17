@@ -1,4 +1,6 @@
+const { getTopics } = require("../controllers/topics.controllers.js");
 const db = require("../db/connection.js");
+const {selectTopics} = require('./topics.models')
 
 exports.selectArticleById = (article_id) => {
   return db
@@ -31,7 +33,6 @@ exports.updateArticleById = (article_id, body) => {
       RETURNING *;`,
         [inc_votes, article_id]
       )
-      //refactor then block later to seperate function?
       .then(({ rows }) => {
         const article = rows[0];
         if (!article) {
@@ -50,15 +51,38 @@ exports.selectCommentsByArticleId = (article_id) => {
 })
 };
 
-exports.selectArticles = ({sortBy} = 'created_at', {order} = 'DESC', topic) =>{
-  console.log(sortBy)
-  return db.query(`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.body)::INT AS comment_count 
-         FROM articles 
-         LEFT JOIN comments 
-         ON articles.article_id = comments.article_id
-         GROUP BY articles.article_id
-   ORDER BY ${sortBy} ${order};`)
+exports.selectArticles = ({sortBy = 'created_at', order = 'DESC', topic}, topicsArray) =>{
+
+if (!['created_at', 'topic', 'author', 'title', 'votes'].includes(sortBy)) {
+  return Promise.reject({ status: 400, msg: 'bad request'});
+}
+
+if (!['ASC', 'DESC'].includes(order)) {
+  return Promise.reject({ status: 400, msg: 'bad request'});
+}
+
+if (topic != undefined) {
+if (!topicsArray.includes(topic)) {
+  console.log('no match')
+    return Promise.reject({ status: 400, msg: 'bad request'});
+  }
+}
+
+let queryString = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.body)::INT AS comment_count 
+FROM articles 
+LEFT JOIN comments 
+ON articles.article_id = comments.article_id `
+
+if (topic) {
+queryString += `WHERE topic = '${topic}' `
+}
+
+queryString += `GROUP BY articles.article_id
+ORDER BY ${sortBy} ${order};`
+
+return db.query(queryString)
   .then(({rows})=>{
     return rows;
   })
 }
+
