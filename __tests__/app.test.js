@@ -132,14 +132,14 @@ describe("/api/articles/:article_id", () => {
           });
         });
     });
-    test("400 - given invalid id data type, returns message: bad request", () => {
+    test("404 - given correct id with no data, returns message: not found", () => {
       const votes = { inc_votes: -10 };
       return request(app)
-        .patch("/api/articles/not-an-id")
+        .patch("/api/articles/999999")
         .send(votes)
-        .expect(400)
+        .expect(404)
         .then((res) => {
-          expect(res.body.msg).toBe("bad request");
+          expect(res.body.msg).toBe("not found");
         });
     });
   });
@@ -177,9 +177,31 @@ describe("/api/articles/:article_id", () => {
           author: "butter_bridge",
           body: "I find this existence challenging",
           created_at: expect.any(String),
-          votes: 90,
+          votes: 90})
+        })
+      })
+
+
+    test("400 - given invalid id data type, returns message: bad request", () => {
+      const votes = { inc_votes: -10 };
+      return request(app)
+        .patch("/api/articles/not-an-id")
+        .send(votes)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
         });
-      });
+    });
+    test(" 400 - given incorrect votes data type returns message: bad request", () => {
+      const votes = { inc_votes: 'not-a-valid-vote-count' };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    });
   });
   test(" 400- given empty object returns message: bad request", () => {
     const votes = {};
@@ -191,7 +213,6 @@ describe("/api/articles/:article_id", () => {
         expect(res.body.msg).toBe("bad request");
       });
   });
-});
 
 describe("/api/users", () => {
   describe("GET", () => {
@@ -214,11 +235,53 @@ describe("/api/users", () => {
   });
 });
 
+//ticket 15
+describe('/api/articles/:article_id/comments', () => {
+  describe('GET', ()=>{
+    test('200 - given article id responds with all comments for that article. Each comment should have properties: comment_id, votes, created_at, author, body', ()=> {
+      return request(app).get('/api/articles/1/comments')
+      .expect(200)
+      .then((res)=>{
+        const comments = res.body.comments;
+        expect(comments.length).toBe(11);
+        comments.forEach((comment)=>{
+          expect(comment.article_id).toBe(1);
+          expect(comments).not.toEqual([]);
+          expect.objectContaining({comment_id: expect.any(Number),
+          votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String)
+      })
+        })
+      })
+    })
+    test('200 - article exists but has no comments', ()=>{
+      return request(app).get('/api/articles/2/comments')
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.comments).toEqual([]);
+      })
+    })
+    test('404 - given possible but non existent article id returns message not found', () => {
+      return request(app).get('/api/articles/9999999/comments')
+      .expect(404)
+      .then((res)=>{
+        expect(res.body.msg).toBe('not found')
+      })
+    })
+  })
+})
+
+
+
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
 //sql injection
 //data mutation
-
-//while waiting for pull request to be approved, making and switching to new branch to work on also changes previous branch.
-
 // refactor to use async/await?
+//refactor variable names to js convention without _'s
+
+//psql error function had to have if statement updated after merging branches due to subbranch messup stopped 2 error tests passing
+//removed redundant 404 tests covered by global test
+//refactored controller functions into index file 
