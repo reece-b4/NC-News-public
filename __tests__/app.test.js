@@ -440,19 +440,31 @@ describe("/api/articles", () => {
   })
 })
 
-
-// error: given wrong id type, given non existent id
-// describe.only('/api/comments/:comment_id', () =>{
-//   describe('DELETE', () =>{
-//     test('204 - deletes comment with given id and returns nothing', () => {
-//       return request(app).delete('/api/comments/:comment_id')
-//       .expect(204)
-//       .then((res)=>{
-//         expect(res.body).toBe({})
-//       })
-//     })
-//   })
-// })
+describe('/api/comments/:comment_id', () =>{
+  describe('DELETE', () =>{
+    test('204 - deletes comment with given id and returns nothing', () => {
+      return request(app).delete('/api/comments/1')
+      .expect(204)
+      .then((res)=>{
+        expect(res.body).toEqual({})
+      })
+    })
+    test('404 - given non existent comment id returns message: not found', () => {
+      return request(app).delete('/api/comments/99999')
+      .expect(404)
+      .then((res)=>{
+        expect(res.body.msg).toBe('not found')
+      })
+    })
+    test('400 - given bad comment id type returns message: bad request', () => {
+      return request(app).delete('/api/comments/not-an-id')
+      .expect(400)
+      .then((res)=>{
+        expect(res.body.msg).toBe('bad request')
+      })
+    })
+  })
+})
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found----I chained a .then block which negated need for this, any pros/cons of this method?
 

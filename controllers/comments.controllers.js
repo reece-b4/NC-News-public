@@ -1,8 +1,16 @@
+const { selectCommentById } = require('../models/comments.model')
 const {removeCommentById} = require('../models/comments.model')
 
 exports.deleteCommentById = (req, res, next) => {
-    removeCommentById().then(()=>{
-        console.log('controller')
+    selectCommentById(req.params)
+    .then(()=>{
+        console.log
+        removeCommentById(req.params) 
+    })
+    .then(()=>{
         res.sendStatus(204)
+    })
+    .catch((err)=>{
+        next(err)
     })
 }
