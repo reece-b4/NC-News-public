@@ -397,10 +397,24 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
+//error: given wrong id type, given non existent id
+// describe.only('/api/comments/:comment_id', () =>{
+//   describe('DELETE', () =>{
+//     test('204 - deletes comment with given id and returns nothing', () => {
+//       return request(app).delete('/api/comments/:comment_id')
+//       .expect(204)
+//       .then((res)=>{
+//         expect(res.body).toBe({})
+//       })
+//     })
+//   })
+// })
+
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found----I chained a .then block which negated need for this, any pros/cons of this method?
 
 //sql injection
 //data mutation
+//check test structure, some tests shifted to wrong endpoint block
 //refactor to use async/await?
 //refactor variable names to js convention without _'s
 //refactor to include destructuring
