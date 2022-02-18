@@ -1,6 +1,7 @@
 const express = require('express');
-const {getTopics, getArticleById, patchArticleById, getUsernames, getCommentsByArticleId, getArticles, postCommentByArticleId} = require('./controllers/index.js')
+const {getTopics, getArticleById, patchArticleById, getUsernames, getCommentsByArticleId, getArticles, postCommentByArticleId, deleteCommentById} = require('./controllers/index.js')
 const {notAPath, customErrors, sqlErrors, serverErrors} = require('./errorhandling.js')
+
 
 const app = express();
 app.use(express.json())
@@ -12,6 +13,7 @@ app.get('/api/users', getUsernames)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 app.get('/api/articles', getArticles)
 app.post('/api/articles/:article_id/comments', postCommentByArticleId)
+app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.all('/api/*', notAPath)
 app.use(customErrors)
