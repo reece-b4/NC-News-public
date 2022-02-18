@@ -40,6 +40,7 @@ describe("/api/topics", () => {
     });
   });
 });
+
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
     test("200 - responds with article object with properties: author<username from users table>, title, article_id, body, topic, created_at, votes, comment count", () => {
@@ -93,7 +94,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
-
+})
 describe("PATCH - votes", () => {
   test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article", () => {
     const votes = { inc_votes: -10 };
@@ -189,8 +190,8 @@ describe("PATCH - votes", () => {
         expect(res.body.msg).toBe("bad request");
       });
   });
-  test(" 400- given empty object returns message: bad request", () => {
-    const votes = {};
+  test(" 400 - given incorrect votes data type returns message: bad request", () => {
+    const votes = { inc_votes: "not-a-valid-vote-count" };
     return request(app)
       .patch("/api/articles/1")
       .send(votes)
@@ -199,29 +200,18 @@ describe("PATCH - votes", () => {
         expect(res.body.msg).toBe("bad request");
       });
   });
+test(" 400- given empty object returns message: bad request", () => {
+  const votes = {};
+  return request(app)
+    .patch("/api/articles/1")
+    .send(votes)
+    .expect(400)
+    .then((res) => {
+      expect(res.body.msg).toBe("bad request");
+    });
 });
 })
 
-describe("/api/users", () => {
-  describe("GET", () => {
-    test("200 - returns array of objects with username property", () => {
-      return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then((res) => {
-          res.body.usernames.forEach((user) => {
-            expect.objectContaining({
-              username: expect.any(String),
-            });
-            expect.not.objectContaining({
-              name: expect.any(String),
-              avatar_url: expect.any(String),
-            });
-          });
-        });
-    });
-  });
-});
 
 describe("/api/users", () => {
   describe("GET", () => {
@@ -243,6 +233,7 @@ describe("/api/users", () => {
     });
   });
 });
+
 
 describe("/api/articles/:article_id/comments", () => {
   describe("GET", () => {
@@ -280,9 +271,84 @@ describe("/api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe('not found')
       })
     })
-
+    test("404 - given possible but non existent article id returns message not found", () => {
+      return request(app)
+        .get("/api/articles/9999999/comments")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+        });
+    });
   });
-});
+    describe("POST", () => {
+      test("201 - give body object with properties: username & body, posts comment then returns posted comment", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ username: "icellusedkars", body: "Test comment." })
+          .expect(201)
+          .then((res) => {
+            expect(res.body.comment).toEqual({
+              comment_id: expect.any(Number),
+              body: "Test comment.",
+              votes: 0,
+              author: "icellusedkars",
+              article_id: 1,
+              created_at: expect.any(String),
+            });
+          });
+      });
+      test('201 - if comment already exists', () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ username: "icellusedkars", body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works." })
+          .expect(201)
+          .then((res) => {
+            expect(res.body.comment).toEqual({
+              comment_id: expect.any(Number),
+              body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+              votes: 0,
+              author: "icellusedkars",
+              article_id: 1,
+              created_at: expect.any(String),
+            });
+          });
+      })
+      test('400 - if no body given sends message bad request', ()=> {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({})
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).toBe('bad request');
+          });
+      })
+      test('201 - given body with extra key, ignores extra keys', ()=>{
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ username: "icellusedkars", body: "Test comment.", extraKey: 9 })
+          .expect(201)
+          .then((res) => {
+            expect(res.body.comment).toEqual({
+              comment_id: expect.any(Number),
+              body: "Test comment.",
+              votes: 0,
+              author: "icellusedkars",
+              article_id: 1,
+              created_at: expect.any(String),
+            });
+          });
+      })
+      test('400 - given body with missing key send message bad request', () =>{
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ body: "Test comment." })
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).toBe('bad request')
+          });
+      })
+    });
+  });
 
 describe("/api/articles", () => {
   describe("GET", () => {
@@ -307,95 +373,73 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200 - article exists but has no comments", () => {
+    test("200 - given a query: sort by(title), returns organised array of articles", () => {
       return request(app)
-        .get("/api/articles/2/comments")
+        .get("/api/articles?sortBy=title")
         .expect(200)
         .then((res) => {
-          expect(res.body.comments).toEqual([]);
+          expect(res.body.articles).toBeSortedBy("title", { descending: true });
         });
     });
-    test("404 - given possible but non existent article id returns message not found", () => {
+    test("200 - given a query: sort by(topic) order(defaults to DESC), returns organised array of articles", () => {
       return request(app)
-        .get("/api/articles/9999999/comments")
-        .expect(404)
+        .get("/api/articles?sortBy=topic")
+        .expect(200)
         .then((res) => {
-          expect(res.body.msg).toBe("not found");
+          expect(res.body.articles).toBeSortedBy("topic", {descending: true});
         });
     });
-  });
-});
+    test("200 - given a query: sort by(topic) order(ASC), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASC")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("topic");
+        });
+    });
+    test("200 - given a query: topic, returns filtered array of articles", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles.length).toBe(11);
+        });
+    });
+    test('given invalid query returns message -bad request - ASCENDING vs ASC', () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASCENDING")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given incomplete query returns message -bad request', () => {
+      return request(app)
+        .get("/api/articles?sortBy")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - sortby date', () => {
+      return request(app)
+        .get("/api/articles?sortBy=date")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - non existent topic', () => {
+      return request(app)
+        .get("/api/articles?topic=international")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+  })
+})
 
-describe("/api/articles/:article_id/comments", () => {
-  describe("POST", () => {
-    test("201 - give body object with properties: username & body, posts comment then returns posted comment", () => {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ username: "icellusedkars", body: "Test comment." })
-        .expect(201)
-        .then((res) => {
-          expect(res.body.comment).toEqual({
-            comment_id: expect.any(Number),
-            body: "Test comment.",
-            votes: 0,
-            author: "icellusedkars",
-            article_id: 1,
-            created_at: expect.any(String),
-          });
-        });
-    });
-    test('201 - if comment already exists', () => {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ username: "icellusedkars", body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works." })
-        .expect(201)
-        .then((res) => {
-          expect(res.body.comment).toEqual({
-            comment_id: expect.any(Number),
-            body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
-            votes: 0,
-            author: "icellusedkars",
-            article_id: 1,
-            created_at: expect.any(String),
-          });
-        });
-    })
-    test('400 - if no body given sends message bad request', ()=> {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({})
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe('bad request');
-        });
-    })
-    test('201 - given body with extra key, ignores extra keys', ()=>{
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ username: "icellusedkars", body: "Test comment.", extraKey: 9 })
-        .expect(201)
-        .then((res) => {
-          expect(res.body.comment).toEqual({
-            comment_id: expect.any(Number),
-            body: "Test comment.",
-            votes: 0,
-            author: "icellusedkars",
-            article_id: 1,
-            created_at: expect.any(String),
-          });
-        });
-    })
-    test('400 - given body with missing key send message bad request', () =>{
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ body: "Test comment." })
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe('bad request')
-        });
-    })
-  });
-});
 
 // error: given wrong id type, given non existent id
 // describe.only('/api/comments/:comment_id', () =>{
