@@ -1,3 +1,116 @@
-# Northcoders News API
+<h1 align="center">Welcome to Northcoders News API 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/northcoders/be-nc-news#readme" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="https://github.com/northcoders/be-nc-news/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: ISC" src="https://img.shields.io/github/license/reece-b4/Northcoders News API" />
+  </a>
+</p>
 
-# You will need to create two .env files for your project: .env.test and .env.development. Into each, add PGDATABASE=<database_name_here>, with the correct database name for that environment (see /db/setup.sql for the database names). Double check that these .env files are .gitignored.
+> An API to interact with data in nc_news database which consists of four tables: <br> articles, comments, topics, users. Endpoints are listed in endpoints.json and include: <br>
+"GET /api" <br>
+"GET /api/topics" <br>
+"GET /api/articles" <br>
+"GET /api/articles/:article_id" <br>
+"PATCH /api/articles/:article_id" -votes- <br>
+"GET /api/articles/:article_id/comments" <br>
+"POST /api/articles/:article_id/comments" <br>
+"DELETE /api/comments/:comment_id" <br>
+"GET /api/users" <br>
+<br>
+Queries of: <br>
+sortBy(created_at, topic, author, title, votes, defaults to created_at),  <br>
+order(ASC or DESC, defaults to DESC) and <br>
+topic(filters by topic)  <br>
+can be make on "GET /api/articles".
+
+<br>
+Minimum version of node: v16.13.2 <br>
+Minimum version of Postgres: 14.1 <P>
+
+### 🏠 [Homepage](https://reece-ncnews.herokuapp.com)
+### 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
+### 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
+
+## Cloning repo (link above)
+
+Copy code url from github <br>
+In required directory:
+```sh
+ git clone <url>
+```
+## Dependencies
+
+dotenv <br>
+```sh
+npm install dotenv --save
+```
+express <br>
+```sh
+npm install express
+```
+pg <br>
+```sh
+npm install pg
+```
+pg-format <br>
+```sh
+npm install pg-format
+```
+
+## Test dependencies
+jest <br>
+```sh
+npm i -D jest
+```
+jest-extended <br>
+```sh
+pm install --save-dev jest-extended
+```
+jest-sorted <br>
+```sh
+npm install --save-dev jest-sorted
+```
+supertest <br>
+```sh
+npm install supertest --save-dev
+```
+## Creating .env files
+
+You will need to create two .env files in the repo root directory: <br>
+.env.test and <br>
+.env.development. <br>
+Into each, add:
+```sh
+ PGDATABASE=PGDATABASE=nc_news_test 
+```
+and 
+```sh
+PGDATABASE=PGDATABASE=nc_news 
+```
+respectively.
+
+
+
+## Seeding local database
+```sh
+npm run setup-dbs
+npm run seed
+```
+
+## Run tests
+
+```sh
+npm test app
+```
+
+## Author
+
+👤 **ReeceBalfour**
+
+* Github: [@reece-b4](https://github.com/reece-b4)
