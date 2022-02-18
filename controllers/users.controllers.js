@@ -5,7 +5,6 @@ exports.getUsernames = (req, res) => {
 res.status(200).send({usernames})
     })
     .catch((err)=>{
-        console.log(err)
-      
+        next(err)
     })
 }
