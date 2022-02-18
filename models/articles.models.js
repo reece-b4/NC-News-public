@@ -63,7 +63,6 @@ if (!['ASC', 'DESC'].includes(order)) {
 
 if (topic != undefined) {
 if (!topicsArray.includes(topic)) {
-  console.log('no match')
     return Promise.reject({ status: 400, msg: 'bad request'});
   }
 }

@@ -320,7 +320,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - sortby title", () => {
+    test("200 - given a query: sort by(title), returns organised array of articles", () => {
       return request(app)
         .get("/api/articles?sortBy=title")
         .expect(200)
@@ -328,7 +328,15 @@ describe("/api/articles", () => {
           expect(res.body.articles).toBeSortedBy("title", { descending: true });
         });
     });
-    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - sortby topic order asc", () => {
+    test("200 - given a query: sort by(topic) order(defaults to DESC), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("topic", {descending: true});
+        });
+    });
+    test("200 - given a query: sort by(topic) order(ASC), returns organised array of articles", () => {
       return request(app)
         .get("/api/articles?sortBy=topic&order=ASC")
         .expect(200)
@@ -336,7 +344,7 @@ describe("/api/articles", () => {
           expect(res.body.articles).toBeSortedBy("topic");
         });
     });
-    test("200 - returns with queries, sort by(deaults to date), order(asc or desc), topic(filters by) - filter topic: mitch", () => {
+    test("200 - given a query: topic, returns filtered array of articles", () => {
       return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
@@ -347,6 +355,14 @@ describe("/api/articles", () => {
     test('given invalid query returns message -bad request - ASCENDING vs ASC', () => {
       return request(app)
         .get("/api/articles?sortBy=topic&order=ASCENDING")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given incomplete query returns message -bad request', () => {
+      return request(app)
+        .get("/api/articles?sortBy")
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("bad request");
