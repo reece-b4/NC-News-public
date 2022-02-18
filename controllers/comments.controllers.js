@@ -4,7 +4,6 @@ const {removeCommentById} = require('../models/comments.model')
 exports.deleteCommentById = (req, res, next) => {
     selectCommentById(req.params)
     .then(()=>{
-        console.log
         removeCommentById(req.params) 
     })
     .then(()=>{

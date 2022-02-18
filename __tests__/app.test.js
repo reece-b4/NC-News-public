@@ -96,7 +96,7 @@ describe("/api/articles/:article_id", () => {
   });
 })
 describe("PATCH - votes", () => {
-  test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article", () => {
+  test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article - decrease votes", () => {
     const votes = { inc_votes: -10 };
     return request(app)
       .patch("/api/articles/1")
@@ -114,7 +114,7 @@ describe("PATCH - votes", () => {
         });
       });
   });
-  test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article", () => {
+  test("200 - accepts body in form of { inc_votes: newVote } with newVote dictating the inc/decrement of votes. Responds with updated article - increase votes", () => {
     const votes = { inc_votes: +9 };
     return request(app)
       .patch("/api/articles/1")
@@ -220,6 +220,7 @@ describe("/api/users", () => {
         .get("/api/users")
         .expect(200)
         .then((res) => {
+          expect(res.body.usernames.length).toBe(4)
           res.body.usernames.forEach((user) => {
             expect.objectContaining({
               username: expect.any(String),
@@ -264,13 +265,7 @@ describe("/api/articles/:article_id/comments", () => {
         .then((res) => {
           expect(res.body.comments).toEqual([]);
         });
-    });test('404 - given possible but non existent article id returns message not found', () => {
-      return request(app).get('/api/articles/9999999/comments')
-      .expect(404)
-      .then((res)=>{
-        expect(res.body.msg).toBe('not found')
       })
-    })
     test("404 - given possible but non existent article id returns message not found", () => {
       return request(app)
         .get("/api/articles/9999999/comments")
@@ -470,11 +465,10 @@ describe('/api', () => {
   describe('GET', ()=> {
     test('returns JSON describing all available endpoints', () => {
       return request(app).get('/api')
+      .expect(200)
       .then((res)=> {
         expect(Object.keys(res.body.endpoints)).toEqual([ 'GET /api', 'GET /api/topics', 'GET /api/articles', 'GET /api/articles/:article_id', 'PATCH /api/articles/:article_id', 'GET /api/articles/:article_id/comments', 'POST /api/articles/:article_id/comments', 'GET /api/users'  ])
       })
     })
   })
 })
-
-//check any tests need to prevent false pass by empty array
