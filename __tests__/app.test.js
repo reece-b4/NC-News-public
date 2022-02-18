@@ -465,7 +465,6 @@ describe('/api', () => {
     test('returns JSON describing all available endpoints', () => {
       return request(app).get('/api')
       .then((res)=> {
-        console.log(Object.keys(res.body.endpoints))
         expect(Object.keys(res.body.endpoints)).toEqual([ 'GET /api', 'GET /api/topics', 'GET /api/articles', 'GET /api/articles/:article_id', 'PATCH /api/articles/:article_id', 'GET /api/articles/:article_id/comments', 'POST /api/articles/:article_id/comments', 'GET /api/users'  ])
       })
     })
