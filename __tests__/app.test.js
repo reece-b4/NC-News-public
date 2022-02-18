@@ -344,10 +344,32 @@ describe("/api/articles", () => {
           expect(res.body.articles.length).toBe(11);
         });
     });
+    test('given invalid query returns message -bad request - ASCENDING vs ASC', () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASCENDING")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - sortby date', () => {
+      return request(app)
+        .get("/api/articles?sortBy=date")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - non existent topic', () => {
+      return request(app)
+        .get("/api/articles?topic=international")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
   });
 });
-
-//errors: bad queries, no match for sortby, order, topic,
 
 //promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found,
 
