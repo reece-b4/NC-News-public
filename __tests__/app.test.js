@@ -466,12 +466,15 @@ describe('/api/comments/:comment_id', () =>{
   })
 })
 
-//promise.all in controller to prevent conflicts of empty array being 200 and 404 in different situations, 200 if id is good but no data, 404 if id is not found----I chained a .then block which negated need for this, any pros/cons of this method?
+describe('/api', () => {
+  describe('GET', ()=> {
+    test('returns JSON describing all available endpoints', () => {
+      return request(app).get('/api')
+      .then((res)=> {
+        expect(Object.keys(res.body.endpoints)).toEqual([ 'GET /api', 'GET /api/topics', 'GET /api/articles', 'GET /api/articles/:article_id', 'PATCH /api/articles/:article_id', 'GET /api/articles/:article_id/comments', 'POST /api/articles/:article_id/comments', 'GET /api/users'  ])
+      })
+    })
+  })
+})
 
-//sql injection
-//data mutation
-//check test structure, some tests shifted to wrong endpoint block
-//refactor to use async/await?
-//refactor variable names to js convention without _'s
-//refactor to include destructuring
 //check any tests need to prevent false pass by empty array

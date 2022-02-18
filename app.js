@@ -1,5 +1,5 @@
 const express = require('express');
-const {getTopics, getArticleById, patchArticleById, getUsernames, getCommentsByArticleId, getArticles, postCommentByArticleId, deleteCommentById} = require('./controllers/index.js')
+const {getTopics, getArticleById, patchArticleById, getUsernames, getCommentsByArticleId, getArticles, postCommentByArticleId, deleteCommentById, getEndpointsInfo} = require('./controllers/index.js')
 const {notAPath, customErrors, sqlErrors, serverErrors} = require('./errorhandling.js')
 
 
@@ -14,6 +14,8 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 app.get('/api/articles', getArticles)
 app.post('/api/articles/:article_id/comments', postCommentByArticleId)
 app.delete('/api/comments/:comment_id', deleteCommentById)
+
+app.get('/api', getEndpointsInfo)
 
 app.all('/api/*', notAPath)
 app.use(customErrors)
