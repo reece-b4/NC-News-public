@@ -3,14 +3,12 @@ exports.notAPath = (req, res) => {
 };
 
 exports.customErrors = (err, req, res, next) => {
-    if (err.status === 404) {
-        res.status(404).send({msg: 'not found'})
-    } else if (err.status === 400) {
-        res.status(400).send({msg: 'bad request'})
-    } else {
-        next(err);
-    }
-} 
+    if (err.status) {
+        res.status(err.status).send({msg: err.msg})
+} else {
+  next(err)
+}
+}
 
 exports.sqlErrors = (err, req, res, next) => {
   if ((err.code === "22P02" || err.code === "23502")) {

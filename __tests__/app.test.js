@@ -40,6 +40,7 @@ describe("/api/topics", () => {
     });
   });
 });
+
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
     test("200 - responds with article object with properties: author<username from users table>, title, article_id, body, topic, created_at, votes, comment count", () => {
@@ -179,6 +180,7 @@ describe("PATCH - votes", () => {
         });
       });
   });
+
   test("400 - given invalid id data type, returns message: bad request", () => {
     const votes = { inc_votes: -10 };
     return request(app)
@@ -189,8 +191,8 @@ describe("PATCH - votes", () => {
         expect(res.body.msg).toBe("bad request");
       });
   });
-  test(" 400- given empty object returns message: bad request", () => {
-    const votes = {};
+  test(" 400 - given incorrect votes data type returns message: bad request", () => {
+    const votes = { inc_votes: "not-a-valid-vote-count" };
     return request(app)
       .patch("/api/articles/1")
       .send(votes)
@@ -200,7 +202,18 @@ describe("PATCH - votes", () => {
       });
   });
 });
+test(" 400- given empty object returns message: bad request", () => {
+  const votes = {};
+  return request(app)
+    .patch("/api/articles/1")
+    .send(votes)
+    .expect(400)
+    .then((res) => {
+      expect(res.body.msg).toBe("bad request");
+    });
+});
 })
+
 
 describe("/api/users", () => {
   describe("GET", () => {
@@ -323,8 +336,104 @@ describe("/api/articles", () => {
           expect(res.body.msg).toBe("not found");
         });
     });
+    test("404 - given possible but non existent article id returns message not found", () => {
+      return request(app)
+        .get("/api/articles/9999999/comments")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+        });
+    });
   });
 });
+
+describe("/api/articles", () => {
+  describe("GET", () => {
+    test("200 - responds with array of article objects with properties: author, title, article_id, topic, created_at, votes, comment_count. Sorted by descending date", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+          articles.forEach((article) => {
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            });
+          });
+        });
+    });
+    test("200 - given a query: sort by(title), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=title")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("title", { descending: true });
+        });
+    });
+    test("200 - given a query: sort by(topic) order(defaults to DESC), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("topic", {descending: true});
+        });
+    });
+    test("200 - given a query: sort by(topic) order(ASC), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASC")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("topic");
+        });
+    });
+    test("200 - given a query: topic, returns filtered array of articles", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles.length).toBe(11);
+        });
+    });
+    test('given invalid query returns message -bad request - ASCENDING vs ASC', () => {
+      return request(app)
+        .get("/api/articles?sortBy=topic&order=ASCENDING")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given incomplete query returns message -bad request', () => {
+      return request(app)
+        .get("/api/articles?sortBy")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - sortby date', () => {
+      return request(app)
+        .get("/api/articles?sortBy=date")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
+    test('given invalid query returns message -bad request - non existent topic', () => {
+      return request(app)
+        .get("/api/articles?topic=international")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+        });
+    })
 
 describe("/api/articles/:article_id/comments", () => {
   describe("POST", () => {
