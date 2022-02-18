@@ -440,25 +440,31 @@ describe("/api/articles", () => {
   })
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+describe('/api/comments/:comment_id', () =>{
+  describe('DELETE', () =>{
+    test('204 - deletes comment with given id and returns nothing', () => {
+      return request(app).delete('/api/comments/1')
+      .expect(204)
+      .then((res)=>{
+        expect(res.body).toEqual({})
+      })
+    })
+    test('404 - given non existent comment id returns message: not found', () => {
+      return request(app).delete('/api/comments/99999')
+      .expect(404)
+      .then((res)=>{
+        expect(res.body.msg).toBe('not found')
+      })
+    })
+    test('400 - given bad comment id type returns message: bad request', () => {
+      return request(app).delete('/api/comments/not-an-id')
+      .expect(400)
+      .then((res)=>{
+        expect(res.body.msg).toBe('bad request')
+      })
+    })
+  })
+})
 
 describe('/api', () => {
   describe('GET', ()=> {
@@ -471,7 +477,4 @@ describe('/api', () => {
   })
 })
 
-//refactor to use async/await?
-//refactor variable names to js convention without _'s
-//refactor to include destructuring
 //check any tests need to prevent false pass by empty array
