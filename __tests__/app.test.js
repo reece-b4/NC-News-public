@@ -397,7 +397,7 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
-//error: given wrong id type, given non existent id
+// error: given wrong id type, given non existent id
 // describe.only('/api/comments/:comment_id', () =>{
 //   describe('DELETE', () =>{
 //     test('204 - deletes comment with given id and returns nothing', () => {
