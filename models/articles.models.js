@@ -85,3 +85,15 @@ return db.query(queryString)
   })
 }
 
+exports.addCommentByArticleId = ({username, body}, article_id) => {
+  if (body === undefined) {
+    return Promise.reject({status: 400, msg: 'bad request'})
+  }
+  return db.query(`INSERT into comments
+  (author, body, article_id)
+  VALUES ($1, $2, $3) RETURNING *;`, [username, body, article_id])
+  .then(({rows})=>{
+    return rows[0];
+  })
+}
+
