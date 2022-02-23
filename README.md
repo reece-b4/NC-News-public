@@ -4,12 +4,6 @@
   <a href="https://github.com/northcoders/be-nc-news#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/northcoders/be-nc-news/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/github/license/reece-b4/Northcoders News API" />
-  </a>
 </p>
 
 > An API to interact with data in nc_news database which consists of four tables: <br> articles, comments, topics, users. Endpoints are listed in endpoints.json and include: <br>
@@ -44,42 +38,13 @@ In required directory:
 ```sh
  git clone <url>
 ```
-## Dependencies
 
-dotenv <br>
+## Install Dependencies
 ```sh
-npm install dotenv --save
+npm install
 ```
-express <br>
-```sh
-npm install express
-```
-pg <br>
-```sh
-npm install pg
-```
-pg-format <br>
-```sh
-npm install pg-format
-```
+Full list of dependencies can be found further in ReadMe.
 
-## Test dependencies
-jest <br>
-```sh
-npm i -D jest
-```
-jest-extended <br>
-```sh
-pm install --save-dev jest-extended
-```
-jest-sorted <br>
-```sh
-npm install --save-dev jest-sorted
-```
-supertest <br>
-```sh
-npm install supertest --save-dev
-```
 ## Creating .env files
 
 You will need to create two .env files in the repo root directory: <br>
@@ -95,8 +60,6 @@ PGDATABASE=PGDATABASE=nc_news
 ```
 respectively.
 
-
-
 ## Seeding local database
 ```sh
 npm run setup-dbs
@@ -108,7 +71,23 @@ npm run seed
 ```sh
 npm test app
 ```
+## Dependency list
 
+dotenv, express, pg, pg-format <br>
+### Test dependencies
+jest, jest-extended, jest-sorted, supertest <br>
+
+```sh
+npm install dotenv --save
+npm install express
+npm install pg
+npm install pg-format
+
+npm install -D jest
+npm install --save-dev jest-extended
+npm install --save-dev jest-sorted
+npm install supertest --save-dev
+```
 ## Author
 
 👤 **ReeceBalfour**
