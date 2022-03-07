@@ -21,7 +21,7 @@ Queries of: <br>
 sortBy(created_at, topic, author, title, votes, defaults to created_at),  <br>
 order(ASC or DESC, defaults to DESC) and <br>
 topic(filters by topic)  <br>
-can be make on "GET /api/articles".
+can be made on "GET /api/articles".
 
 <br>
 Minimum version of node: v16.13.2 <br>
