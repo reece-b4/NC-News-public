@@ -53,7 +53,7 @@ exports.selectCommentsByArticleId = (article_id) => {
 
 exports.selectArticles = ({sortBy = 'created_at', order = 'DESC', topic}, topicsArray) =>{
 
-if (!['created_at', 'topic', 'author', 'title', 'votes'].includes(sortBy)) {
+if (!['created_at', 'topic', 'author', 'title', 'votes', 'comment_count'].includes(sortBy)) {
   return Promise.reject({ status: 400, msg: 'bad request'});
 }
 

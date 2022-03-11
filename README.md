@@ -18,7 +18,7 @@
 "GET /api/users" <br>
 <br>
 Queries of: <br>
-sortBy(created_at, topic, author, title, votes, defaults to created_at),  <br>
+sortBy(created_at, topic, author, title, votes, defaults to created_at, comment_count),  <br>
 order(ASC or DESC, defaults to DESC) and <br>
 topic(filters by topic)  <br>
 can be made on "GET /api/articles".

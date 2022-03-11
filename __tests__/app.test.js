@@ -376,6 +376,22 @@ describe("/api/articles", () => {
           expect(res.body.articles).toBeSortedBy("title", { descending: true });
         });
     });
+    test("200 - given a query: sort by(author), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=author")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("author", { descending: true });
+        });
+    });
+    test("200 - given a query: sort by(comment_count), returns organised array of articles", () => {
+      return request(app)
+        .get("/api/articles?sortBy=comment_count")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("comment_count", { descending: true });
+        });
+    });
     test("200 - given a query: sort by(topic) order(defaults to DESC), returns organised array of articles", () => {
       return request(app)
         .get("/api/articles?sortBy=topic")
