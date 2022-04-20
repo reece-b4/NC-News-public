@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> An API to interact with data in nc_news database which consists of four tables: <br> articles, comments, topics, users. Endpoints are listed in endpoints.json and include: <br>
+An API to interact with data in nc_news database which consists of four tables: <br> articles, comments, topics, users. Endpoints are listed in endpoints.json and include: <br>
 "GET /api" <br>
 "GET /api/topics" <br>
 "GET /api/articles" <br>
@@ -30,6 +30,10 @@ Minimum version of Postgres: 14.1 <P>
 ### 🏠 [Homepage](https://reece-ncnews.herokuapp.com)
 ### 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
 ### 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
+
+### 🏠 [Front-end Homepage](https://reecebalfourncnews.netlify.app)
+### 🖥️ [Front-end Git Repo](https://github.com/reece-b4/fe-nc-news)
+<br>
 
 ## Cloning repo (link above)
 
@@ -73,7 +77,7 @@ npm test app
 ```
 ## Dependency list
 
-dotenv, express, pg, pg-format <br>
+dotenv, express, pg, pg-format, cors <br>
 ### Test dependencies
 jest, jest-extended, jest-sorted, supertest <br>
 
