@@ -27,7 +27,7 @@ can be made on "GET /api/articles".
 Minimum version of node: v16.13.2 <br>
 Minimum version of Postgres: 14.1 <P>
 
-### 🏠 [Homepage](https://reece-ncnews.herokuapp.com)
+### 🏠 [Homepage](https://reece-ncnews.herokuapp.com/api)
 ### 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
 ### 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
 
@@ -52,8 +52,8 @@ Full list of dependencies can be found further in ReadMe.
 ## Creating .env files
 
 You will need to create two .env files in the repo root directory: <br>
-.env.test and <br>
-.env.development. <br>
+`.env.test` and <br>
+`.env.development` <br>
 Into each, add:
 ```sh
  PGDATABASE=PGDATABASE=nc_news_test 
@@ -75,23 +75,7 @@ npm run seed
 ```sh
 npm test app
 ```
-## Dependency list
 
-dotenv, express, pg, pg-format, cors <br>
-### Test dependencies
-jest, jest-extended, jest-sorted, supertest <br>
-
-```sh
-npm install dotenv --save
-npm install express
-npm install pg
-npm install pg-format
-
-npm install -D jest
-npm install --save-dev jest-extended
-npm install --save-dev jest-sorted
-npm install supertest --save-dev
-```
 ## Author
 
 👤 **ReeceBalfour**
