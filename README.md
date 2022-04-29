@@ -27,12 +27,14 @@ can be made on "GET /api/articles".
 Minimum version of node: v16.13.2 <br>
 Minimum version of Postgres: 14.1 <P>
 
-### 🏠 [Homepage](https://reece-ncnews.herokuapp.com/api)
-### 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
-### 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
+## Links
 
-### 🏠 [Front-end Homepage](https://reecebalfourncnews.netlify.app)
-### 🖥️ [Front-end Git Repo](https://github.com/reece-b4/fe-nc-news)
+## 🏠 [Homepage](https://reece-ncnews.herokuapp.com/api)
+## 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
+## 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
+
+## 🏠 [Front-end Homepage](https://reecebalfourncnews.netlify.app)
+## 🖥️ [Front-end Git Repo](https://github.com/reece-b4/fe-nc-news)
 <br>
 
 ## Cloning repo (link above)
