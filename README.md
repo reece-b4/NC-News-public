@@ -29,12 +29,11 @@ Minimum version of Postgres: 14.1 <P>
 
 ## Links
 
-## 🏠 [Homepage](https://reece-ncnews.herokuapp.com/api)
-## 📰 [Example route](https://reece-ncnews.herokuapp.com/api/articles)
+## 🏠 [Hosted API](https://reece-ncnews.herokuapp.com/api)
 ## 🖥️ [Git Repo](https://github.com/reece-b4/NC-News-public)
 
 ## 🏠 [Front-end Homepage](https://reecebalfourncnews.netlify.app)
-## 🖥️ [Front-end Git Repo](https://github.com/reece-b4/fe-nc-news)
+## 🖥️ [Front-end GitHub Repo](https://github.com/reece-b4/fe-nc-news)
 <br>
 
 ## Cloning repo (link above)
