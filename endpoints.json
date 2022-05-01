@@ -33,7 +33,7 @@
       "topic": "mitch",
       "author": "butter_bridge",
       "body": "I find this existence challenging",
-      "created_at": 1594329060000,
+      "created_at": "2020-11-07T06:03:00.000Z",
       "votes": 100
     }
   },
@@ -41,12 +41,16 @@
     "description": "serves article object with updated vote value",
     "queries": [],
     "exampleResponse": {
-      "title": "Living in the shadow of a great man",
-      "topic": "mitch",
-      "author": "butter_bridge",
-      "body": "I find this existence challenging",
-      "created_at": 1594329060000,
-      "votes": 90
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+        "created_at": "2020-11-07T06:03:00.000Z",
+        "votes": 6,
+        "comment_count": 8
+      }
     }
   },
   "GET /api/articles/:article_id/comments": {
@@ -55,11 +59,12 @@
     "exampleResponse": {
       "comments": [
         {
-          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-          "votes": 16,
-          "author": "butter_bridge",
+          "comment_id": 45,
+          "body": "Sint doloribus expedita non sed fuga aliquid vero. Amet consectetur eos eum. Tempora error velit rerum vitae voluptatem voluptatibus consequuntur voluptatibus ea. Et vitae et pariatur est molestias. Nobis est harum debitis rem accusantium est ipsa sed. Voluptatem beatae at beatae.",
           "article_id": 9,
-          "created_at": 1586179020000
+          "author": "cooljmessy",
+          "votes": 10,
+          "created_at": "2020-09-09T18:11:00.000Z"
         }
       ]
     }
@@ -67,14 +72,16 @@
   "POST /api/articles/:article_id/comments": {
     "description": "posts comment with value of given id and serves posted comment",
     "queries": [],
+    "exampleBody" : { "username": "jessjelly", "body": "Test comment." },
     "exampleResponse": {
       "comment": [
         {
-          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-          "votes": 16,
-          "author": "butter_bridge",
-          "article_id": 9,
-          "created_at": 1586179020000
+          "comment_id": 514,
+          "body": "Test comment.",
+          "votes": 0,
+          "author": "jessjelly",
+          "article_id": 1,
+          "created_at": "2020-09-09T18:11:00.000Z"
         }
       ]
     }
@@ -89,10 +96,24 @@
     "queries": [],
     "exampleResponse": {
       "usernames": [
-        { "username": "butter_bridge" },
-        { "username": "icellusedkars" },
-        { "username": "rogersop" },
-        { "username": "lurker" }
+        {
+          "username": "tickle122"
+        },
+        {
+          "username": "grumpy19"
+        },
+        {
+          "username": "happyamy2016"
+        },
+        {
+          "username": "cooljmessy"
+        },
+        {
+          "username": "weegembump"
+        },
+        {
+          "username": "jessjelly"
+        }
       ]
     }
   }
